@@ -30,27 +30,29 @@ export default function InputForm({
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-md space-y-4 max-w-md mx-auto">
+    <div className="glass p-6 rounded-2xl space-y-4 w-full max-w-xl mx-auto">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          placeholder="Describe the item (e.g. red satin top)"
-          className="w-full p-3 rounded-lg bg-white text-gray-800 shadow border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black"
-          value={item}
-          onChange={(e) => setItem(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Mood or occasion (e.g. party, work)"
-          className="w-full p-3 rounded-lg bg-white text-gray-800 shadow border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black"
-          value={occasion}
-          onChange={(e) => setOccasion(e.target.value)}
-          required
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <input
+            type="text"
+            placeholder="Describe the item (e.g. red satin top)"
+            className="w-full p-3 rounded-lg bg-transparent border border-[color:var(--border)] placeholder:opacity-60 focus:outline-none focus:ring-2 focus:ring-[color:var(--ring)]"
+            value={item}
+            onChange={(e) => setItem(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Mood or occasion (e.g. party, work)"
+            className="w-full p-3 rounded-lg bg-transparent border border-[color:var(--border)] placeholder:opacity-60 focus:outline-none focus:ring-2 focus:ring-[color:var(--ring)]"
+            value={occasion}
+            onChange={(e) => setOccasion(e.target.value)}
+            required
+          />
+        </div>
         <button
           type="submit"
-          className="bg-black text-white px-4 py-2 rounded w-full transition-all hover:bg-gray-900"
+          className="btn-primary px-4 py-3 rounded-lg w-full transition-transform active:scale-[0.99]"
           disabled={loading}
         >
           {loading ? "Generating..." : "Get Outfit Suggestions"}
@@ -58,7 +60,7 @@ export default function InputForm({
       </form>
 
       {loading && (
-        <p className="text-center text-gray-500 mt-2 animate-pulse">
+        <p className="text-center opacity-70 mt-1 animate-pulse">
           Generating outfit suggestions...
         </p>
       )}

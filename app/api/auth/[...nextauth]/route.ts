@@ -6,8 +6,6 @@ import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcrypt';
 import type { NextAuthOptions } from 'next-auth';
-import type { Session } from 'next-auth';
-import type { DefaultUser } from 'next-auth';
 
 declare module "next-auth" {
   interface Session {
@@ -20,7 +18,7 @@ declare module "next-auth" {
   }
 }
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({

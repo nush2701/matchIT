@@ -1,26 +1,91 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Base colors (pastel, light by default) */
+  --background: #fbfbff; /* near-white with lavender tint */
+  --foreground: #1f2937; /* slate-800 */
+
+  /* Brand (soft pastels) */
+  --primary: #a7c5eb; /* pastel blue */
+  --primary-600: #94b6e0;
+  --primary-700: #83a7d6;
+  --secondary: #d1c2ff; /* pastel violet */
+  --accent: #b8f2e6; /* pastel mint */
+
+  /* Surfaces */
+  --card: #ffffff;
+  --muted: #6b7280; /* slate-500 */
+  --border: rgba(31, 41, 55, 0.12);
+  --ring: rgba(167, 197, 235, 0.6);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+
+  --color-primary: var(--primary);
+  --color-primary-600: var(--primary-600);
+  --color-primary-700: var(--primary-700);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #fbfbff;
+    --foreground: #1f2937;
+    --card: #ffffff;
+    --muted: #6b7280;
+    --border: rgba(31, 41, 55, 0.12);
+    --ring: rgba(167, 197, 235, 0.6);
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0f1115;
+    --foreground: #e8eef2;
+    --card: rgba(255, 255, 255, 0.06);
+    --muted: rgba(255, 255, 255, 0.70);
+    --border: rgba(255, 255, 255, 0.12);
+    --ring: rgba(209, 194, 255, 0.5);
   }
 }
 
 body {
-  background: var(--background);
+  min-height: 100vh;
+  background:
+    radial-gradient(1000px 700px at 80% -10%, rgba(167, 197, 235, 0.28), transparent 60%),
+    radial-gradient(900px 600px at -10% 20%, rgba(209, 194, 255, 0.26), transparent 60%),
+    radial-gradient(700px 500px at 60% 110%, rgba(184, 242, 230, 0.22), transparent 60%),
+    linear-gradient(0deg, var(--background), var(--background));
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+.glass {
+  background: var(--card);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+}
+
+.btn-primary {
+  background-image: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.05);
+}
+
+.ring-primary {
+  box-shadow: 0 0 0 2px var(--ring);
 }
