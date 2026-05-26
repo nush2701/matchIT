@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { SessionProvider } from "next-auth/react";
 import Navbar from "@/components/navbar";
+import OnboardingGate from "@/components/OnboardingGate";
 
 export default function ClientLayout({
   children,
@@ -13,6 +14,7 @@ export default function ClientLayout({
   const hideNavbar = pathname === "/signin" || pathname === "/signup";
   return (
     <SessionProvider>
+      <OnboardingGate />
       {!hideNavbar && <Navbar />}
       {children}
     </SessionProvider>

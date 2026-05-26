@@ -1,16 +1,22 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Fraunces, Inter } from 'next/font/google';
 import './globals.css';
 import ClientLayout from '@/components/ClientLayout';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+// Display: heavy, vintage-serif substitute for WindsorEF
+const display = Fraunces({
   subsets: ['latin'],
+  weight: ['700', '900'],
+  variable: '--font-windsoref',
+  display: 'swap',
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+// Body: Inter (the Ano substitute)
+const body = Inter({
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-ano',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -20,7 +26,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${display.variable} ${body.variable}`}>
       <body>
         <ClientLayout>{children}</ClientLayout>
       </body>

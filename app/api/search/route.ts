@@ -14,7 +14,9 @@ const tokens = new Map<string, { windowStart: number; count: number }>();
 
 function getClientToken(req: NextRequest): string {
   const ip =
-    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.ip || 'anon';
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    req.headers.get('x-real-ip')?.trim() ||
+    'anon';
   return ip;
 }
 
@@ -52,26 +54,37 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ results: hit.data }, { status: 200 });
     }
 
-    const apiKey = process.env.SERPAPI_KEY;
+    const apiKey = process.env.SERPER_API_KEY;
     if (!apiKey) {
-      return NextResponse.json({ error: 'Missing SERPAPI_KEY' }, { status: 500 });
+      return NextResponse.json({ error: 'Missing SERPER_API_KEY' }, { status: 500 });
     }
 
-    const url = new URL('https://serpapi.com/search.json');
-    url.searchParams.set('engine', 'google');
-    url.searchParams.set('num', '5');
-    url.searchParams.set('q', q);
-    url.searchParams.set('api_key', apiKey);
-
-    const res = await fetch(url.toString(), { cache: 'no-store' });
+    // Serper.dev — fast Google Search API (drop-in replacement for SerpAPI).
+    const res = await fetch('https://google.serper.dev/search', {
+      method: 'POST',
+      headers: {
+        'X-API-KEY': apiKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ q, num: 5 }),
+      cache: 'no-store',
+    });
     if (!res.ok) {
       return NextResponse.json({ error: 'Search failed' }, { status: 502 });
     }
-    const data: { organic_results?: { title?: string; link?: string; displayed_link?: string }[] } = await res.json();
-    const organic = Array.isArray(data?.organic_results) ? data.organic_results : [];
+    const data: { organic?: { title?: string; link?: string }[] } = await res.json();
+    const organic = Array.isArray(data?.organic) ? data.organic : [];
 
     const items: SerpItem[] = organic
-      .map((r) => ({ title: r.title, link: r.link, source: r.displayed_link }))
+      .map((r) => {
+        let source: string | undefined;
+        try {
+          source = r.link ? new URL(r.link).hostname.replace(/^www\./, '') : undefined;
+        } catch {
+          source = undefined;
+        }
+        return { title: r.title, link: r.link, source };
+      })
       .filter((r) => r.link && /^https:\/\//.test(r.link))
       .slice(0, 5);
 

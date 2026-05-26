@@ -5,12 +5,15 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  // Placeholder only — the real connection to Turso is handled by the
+  // libSQL driver adapter (see lib/prisma.ts and prisma.config.ts).
+  url      = "file:./dev.db"
 }
 
 model User {
@@ -25,6 +28,35 @@ model User {
   accounts        Account[]        // <-- for OAuth (required by NextAuth)
   sessions        Session[]        // <-- for session handling
   wardrobe        WardrobeItem[]   // your custom model
+  profile         UserProfile?     // 1:1 style/personalization profile
+}
+
+// Per-user style profile, captured by the onboarding quiz.
+// NOTE: SQLite (via Prisma) has no enums or scalar lists, so single choices
+// are validated Strings and multi-selects are stored as JSON-encoded strings.
+model UserProfile {
+  id        String  @id @default(cuid())
+  userId    String  @unique
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  onboarded Boolean @default(false)
+
+  // single choice
+  gender        String? // "woman" | "man" | "nonbinary" | "na"
+  shopFor       String? // "womenswear" | "menswear" | "unisex"
+  fitPreference String? // "fitted" | "regular" | "relaxed"
+  budget        String? // "budget" | "mid" | "premium"
+  vibe          String? // "timeless" | "trendy"
+  statement     String? // "minimal" | "bold"
+
+  // multi choice (JSON arrays as strings)
+  styles         String? // ["minimalist","streetwear"]
+  occasions      String? // ["work","night out"]
+  colorPalette   String? // ["neutrals","earth tones"]
+  avoidColors    String? // ["neon"]
+  favoriteBrands String? // free text or ["uniqlo"]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 

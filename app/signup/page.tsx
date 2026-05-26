@@ -16,9 +16,7 @@ export default function SignUpPage() {
     const res = await fetch("/api/signup", {
       method: "POST",
       body: JSON.stringify({ email, password }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     });
 
     const data = await res.json();
@@ -31,16 +29,22 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-          Sign Up
-        </h2>
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="w-full max-w-md glass p-8 space-y-6">
+        <div className="text-center space-y-1">
+          <h1 className="font-display text-4xl text-[color:var(--color-deep-sea-teal)]">
+            Join matchIT
+          </h1>
+          <p className="text-sm text-[color:var(--muted)]">
+            Create an account to get styled.
+          </p>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"
             placeholder="Email"
-            className="w-full px-4 py-2 border text-gray-900 rounded-md focus:outline-none focus:ring focus:border-blue-400"
+            className="input-pill w-full px-5 py-3"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -48,22 +52,22 @@ export default function SignUpPage() {
           <input
             type="password"
             placeholder="Password"
-            className="w-full px-4 py-2 border text-gray-900 rounded-md focus:outline-none focus:ring focus:border-blue-400"
+            className="input-pill w-full px-5 py-3"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-          <button
-            type="submit"
-            className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-700 transition"
-          >
+          {error && (
+            <p className="text-[color:var(--color-ruby-red)] text-sm font-semibold">{error}</p>
+          )}
+          <button type="submit" className="btn-primary w-full py-3 text-[17px]">
             Create Account
           </button>
         </form>
-        <p className="mt-4 text-center text-sm text-gray-600">
+
+        <p className="text-sm text-center text-[color:var(--muted)]">
           Already have an account?{" "}
-          <a href="/signin" className="text-blue-600 hover:underline">
+          <a href="/signin" className="text-[color:var(--color-deep-sea-teal)] font-semibold hover:underline">
             Sign In
           </a>
         </p>

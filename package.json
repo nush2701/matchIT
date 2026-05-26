@@ -9,7 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/genai": "^2.6.0",
+    "@libsql/client": "^0.17.3",
     "@next-auth/prisma-adapter": "^1.0.7",
+    "@prisma/adapter-libsql": "^6.10.1",
     "@prisma/client": "^6.10.1",
     "axios": "^1.10.0",
     "bcrypt": "^6.0.0",
@@ -26,6 +29,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
     "prisma": "^6.10.1",

@@ -1,4 +1,14 @@
+"use client";
+
 import { useState } from "react";
+
+const SEASONS = [
+  { value: "any", label: "Any season" },
+  { value: "spring", label: "Spring" },
+  { value: "summer", label: "Summer" },
+  { value: "fall", label: "Fall" },
+  { value: "winter", label: "Winter" },
+];
 
 export default function InputForm({
   onResult,
@@ -7,6 +17,8 @@ export default function InputForm({
 }) {
   const [item, setItem] = useState("");
   const [occasion, setOccasion] = useState("");
+  const [color, setColor] = useState("");
+  const [season, setSeason] = useState("any");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -16,7 +28,7 @@ export default function InputForm({
     const res = await fetch("/api/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ item, occasion }),
+      body: JSON.stringify({ item, occasion, color, season }),
     });
 
     const data = await res.json();
@@ -29,39 +41,78 @@ export default function InputForm({
     }
   };
 
+  const labelCls =
+    "block text-xs font-semibold uppercase tracking-wide text-[color:var(--color-deep-sea-teal)] mb-1.5";
+  const optional = (
+    <span className="opacity-50 normal-case font-normal">(optional)</span>
+  );
+
   return (
-    <div className="glass p-6 rounded-2xl space-y-4 w-full max-w-xl mx-auto">
+    <div className="glass p-6 md:p-8 w-full max-w-2xl mx-auto">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div>
+          <label className={labelCls}>What are you styling?</label>
           <input
             type="text"
-            placeholder="Describe the item (e.g. red satin top)"
-            className="w-full p-3 rounded-lg bg-transparent border border-[color:var(--border)] placeholder:opacity-60 focus:outline-none focus:ring-2 focus:ring-[color:var(--ring)]"
+            placeholder="e.g. red satin top"
+            className="input-pill w-full px-5 py-3"
             value={item}
             onChange={(e) => setItem(e.target.value)}
             required
           />
-          <input
-            type="text"
-            placeholder="Mood or occasion (e.g. party, work)"
-            className="w-full p-3 rounded-lg bg-transparent border border-[color:var(--border)] placeholder:opacity-60 focus:outline-none focus:ring-2 focus:ring-[color:var(--ring)]"
-            value={occasion}
-            onChange={(e) => setOccasion(e.target.value)}
-            required
-          />
         </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className={labelCls}>Occasion or mood</label>
+            <input
+              type="text"
+              placeholder="e.g. party, work"
+              className="input-pill w-full px-5 py-3"
+              value={occasion}
+              onChange={(e) => setOccasion(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label className={labelCls}>Main color {optional}</label>
+            <input
+              type="text"
+              placeholder="e.g. black, beige"
+              className="input-pill w-full px-5 py-3"
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className={labelCls}>Season {optional}</label>
+          <select
+            className="input-pill w-full px-5 py-3 appearance-none cursor-pointer"
+            value={season}
+            onChange={(e) => setSeason(e.target.value)}
+          >
+            {SEASONS.map((s) => (
+              <option key={s.value} value={s.value}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <button
           type="submit"
-          className="btn-primary px-4 py-3 rounded-lg w-full transition-transform active:scale-[0.99]"
+          className="btn-primary px-6 py-3 w-full text-[17px]"
           disabled={loading}
         >
-          {loading ? "Generating..." : "Get Outfit Suggestions"}
+          {loading ? "Generating…" : "Get Outfit Suggestions"}
         </button>
       </form>
 
       {loading && (
-        <p className="text-center opacity-70 mt-1 animate-pulse">
-          Generating outfit suggestions...
+        <p className="text-center text-[color:var(--muted)] animate-pulse mt-3">
+          Mixing up some looks for you…
         </p>
       )}
     </div>
